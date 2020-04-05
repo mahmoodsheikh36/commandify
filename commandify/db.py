@@ -69,3 +69,12 @@ class DBProvider():
     def get_access_token(self):
         return self.cursor().execute('SELECT * FROM access_tokens ORDER BY time\
                                       DESC LIMIT 1').fetchone()
+
+    def get_song(self, song_id):
+        return self.cursor().execute('SELECT * FROM songs WHERE id = ?',
+                                     (song_id,)).fetchone()
+
+    def update_play_time_ended(self, playback_id, time_ended):
+        self.cursor().execute('UPDATE songs SET time_ended = ? WHERE id = ?',
+                              (time_ended, time_ended))
+        self.commit()
