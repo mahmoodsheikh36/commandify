@@ -18,11 +18,16 @@ CREATE TABLE access_tokens (
   token TEXT NOT NULL
 );
 
+CREATE TABLE songs (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL
+);
+
 CREATE TABLE plays (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   time_started INTEGER NOT NULL,
   time_ended INTEGER NOT NULL,
-  song_id INTEGER NOT NULL,
+  song_id TEXT NOT NULL,
   FOREIGN KEY (song_id) REFERENCES songs (id)
 );
 
