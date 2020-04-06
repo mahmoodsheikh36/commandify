@@ -74,6 +74,14 @@ class DBProvider():
         return self.cursor().execute('SELECT * FROM songs WHERE id = ?',
                                      (song_id,)).fetchone()
 
+    def add_play(self, song_id, time_started, time_ended):
+        c = self.cursor()
+        c.execute('INSERT INTO access_tokens (time, token)\
+                   VALUES (?, ?)',
+                  (current_time(), token))
+        self.commit()
+        return c.lastrowid
+
     def update_play_time_ended(self, playback_id, time_ended):
         self.cursor().execute('UPDATE songs SET time_ended = ? WHERE id = ?',
                               (time_ended, time_ended))
