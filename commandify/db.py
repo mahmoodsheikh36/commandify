@@ -76,13 +76,37 @@ class DBProvider():
 
     def add_play(self, song_id, time_started, time_ended):
         c = self.cursor()
-        c.execute('INSERT INTO access_tokens (time, token)\
-                   VALUES (?, ?)',
-                  (current_time(), token))
+        c.execute('INSERT INTO plays (time_started, time_ended, song_id)\
+                   VALUES (?, ?, ?)',
+                  (time_started, time_ended, song_id))
         self.commit()
         return c.lastrowid
 
-    def update_play_time_ended(self, playback_id, time_ended):
-        self.cursor().execute('UPDATE songs SET time_ended = ? WHERE id = ?',
-                              (time_ended, time_ended))
+    def update_play_time_ended(self, play_id, time_ended):
+        self.cursor().execute('UPDATE plays SET time_ended = ? WHERE id = ?',
+                              (time_ended, play_id))
         self.commit()
+
+    def add_pause(self, play_id, time):
+        c = self.cursor()
+        c.execute('INSERT INTO pauses (play_id, time)\
+                   VALUES (?, ?)',
+                  (play_id, time))
+        self.commit()
+        return c.lastrowid
+
+    def add_resume(self, play_id, time):
+        c = self.cursor()
+        c.execute('INSERT INTO resumes (play_id, time)\
+                   VALUES (?, ?)',
+                  (play_id, time))
+        self.commit()
+        return c.lastrowid
+
+    def add_seek(self, play_id, time, position):
+        c = self.cursor()
+        c.execute('INSERT INTO seeks (play_id, time, position)\
+                   VALUES (?, ?, ?)',
+                  (play_id, time, position))
+        self.commit()
+        return c.lastrowid
