@@ -14,8 +14,14 @@ if __name__ == '__main__':
                         required=True)
     parser.add_argument('-l', '--list', metavar='name/link',
                         help='list an album/library/playlist')
-    parser.add_argument('-a', '--action', metavar='action',
-                        help='the action you wanna take: pause,resume,play etc..')
+    parser.add_argument('-p', '--pause', action='store_true',
+                        help='pause the current track')
+    parser.add_argument('-u', '--resume', action='store_true',
+                        help='resume the current track')
+    parser.add_argument('-m', '--monitor', action='store_true',
+                        help='start the powerful data collector')
+    parser.add_argument('-c', '--current', action='store_true',
+                        help='print the current song')
     args = parser.parse_args()
 
     client_id = args.client_id
@@ -36,18 +42,16 @@ if __name__ == '__main__':
         access_token = sp.get_access_token(client_id, client_secret,
                                            refresh_token['token'])
 
-    action = args.action
-    if action is not None:
-        if 'pause' in action:
-            sp.pause(access_token['token'])
-        if 'resume' in action:
-            sp.resume(access_token['token'])
-        if 'monitor' in action:
-            monitor.start(client_id, client_secret, refresh_token)
-        if 'current' in action:
-            current_track = sp.get_current_track(access_token['token'])
-            if current_track is not None:
-                print('{} - {}'.format(current_track['item']['name'],
-                    current_track['item']['artists'][0]['name']))
-            else:
-                print('no track is playing')
+    if args.pause:
+        sp.pause(access_token['token'])
+    elif args.resume:
+        sp.resume(access_token['token'])
+    elif args.monitor:
+        monitor.start(client_id, client_secret, refresh_token)
+    elif args.current:
+        current_track = sp.get_current_track(access_token['token'])
+        if current_track is not None:
+            print('{} - {}'.format(current_track['item']['name'],
+                current_track['item']['artists'][0]['name']))
+        else:
+            print('no track is playing')
