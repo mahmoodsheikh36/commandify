@@ -52,7 +52,7 @@ def get_auth_code(client_id, redirect_uri, scope):
         return db_provider.get_auth_code()
     else:
         print('couldnt find a default browser to open the auth page')
-        return None
+        sys.exit(1)
 
 def get_refresh_token(client_id, client_secret, code, redirect_uri):
     response = requests.post('https://accounts.spotify.com/api/token', data={
