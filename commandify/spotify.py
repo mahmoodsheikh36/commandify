@@ -5,6 +5,7 @@ import socketserver
 import webbrowser
 import urllib.parse
 import os.path
+import sys
 
 from commandify.db import DBProvider
 from commandify.utils import current_time
