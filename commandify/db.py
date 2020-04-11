@@ -9,7 +9,7 @@ __location__ = os.path.realpath(
 
 def get_cache_dir():
     cache_dir = str(Path.home()) + '/.cache/commandify/'
-    Path(cache_dir).mkdir(exist_ok=True)
+    Path(cache_dir).mkdir(exist_ok=True, parents=True)
     return cache_dir
 
 def dict_factory(cursor, row):
