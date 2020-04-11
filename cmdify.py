@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import commandify.spotify as sp
 import commandify.monitor as monitor
 import argparse
