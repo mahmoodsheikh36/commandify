@@ -65,9 +65,10 @@ def start(client_id, client_secret, refresh_token):
                         play = None
 
                 prev_request_time = time
-            except KeyError as e:
+            except (KeyError, TypeError) as e:
                 """
                 sometimes spotify's api sends wrong data resulting in a KeyError
+                or a TypeError
                 """
                 pass
             sleep(REQUEST_INTERVAL)
