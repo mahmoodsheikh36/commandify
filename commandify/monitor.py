@@ -2,6 +2,7 @@ from time import sleep
 
 import commandify.spotify as sp
 from commandify.utils import current_time
+from requests.exceptions import RequestException
 
 REQUEST_INTERVAL = 0.5
 
@@ -65,12 +66,13 @@ def start(client_id, client_secret, refresh_token):
                         play = None
 
                 prev_request_time = time
-            except (KeyError, TypeError) as e:
+            except (KeyError, TypeError, RequestException) as e:
                 """
                 sometimes spotify's api sends wrong data resulting in a KeyError
                 or a TypeError
+                we just end the current play in case an exception occurs
                 """
-                pass
+                play = None
             sleep(REQUEST_INTERVAL)
     except KeyboardInterrupt as e:
         print('quitting..')
