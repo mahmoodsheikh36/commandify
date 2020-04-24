@@ -321,4 +321,4 @@ class DBProvider():
                 album_dict[db_album_artist['album_id']])
 
         return list(album_dict.values()), list(track_dict.values()),\
-               list(artist_dict.values())
+               list(artist_dict.values()), list(play_dict.values())
