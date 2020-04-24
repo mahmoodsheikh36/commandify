@@ -53,12 +53,13 @@ class Artist:
         self.albums = albums
 
 class Play: # gotta add seeks too, but im not using them atm
-    def __init__(self, play_id, time_started, time_ended, resumes, pauses):
+    def __init__(self, play_id, track, time_started, time_ended, resumes, pauses):
         self.id = play_id
         self.resumes = resumes
         self.pauses = pauses
         self.time_started = time_started
         self.time_ended = time_ended
+        self.track = track
 
     def ms_listened(self, from_time=None, to_time=None):
         if abs(len(self.pauses) - len(self.resumes)) > 1:

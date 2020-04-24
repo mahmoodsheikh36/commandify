@@ -297,8 +297,8 @@ class DBProvider():
             album_dict[db_track['album_id']].tracks.append(track)
 
         for db_play in db_plays:
-            play = Play(db_play['id'], db_play['time_started'], db_play['time_ended'],
-                        [], [])
+            play = Play(db_play['id'], track_dict[db_play['track_id']],
+                        db_play['time_started'], db_play['time_ended'], [], [])
             play_dict[play.id] = play
             track_dict[db_play['track_id']].plays.append(play)
 
