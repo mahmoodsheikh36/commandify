@@ -1,20 +1,21 @@
+import traceback
 from time import sleep
+from requests.exceptions import RequestException
 
 import commandify.spotify as sp
 from commandify.utils import current_time
-from requests.exceptions import RequestException
 
 REQUEST_INTERVAL = 0.5
 
-def new_play(song_id):
+def new_play(track_id):
     play = {
         'time_started': current_time(),
         'time_ended': -1,
-        'song_id': song_id,
+        'track_id': track_id,
         'playing': True,
         'progress': -1
     }
-    play['id'] = sp.db_provider.add_play(song_id, play['time_started'],
+    play['id'] = sp.db_provider.add_play(track_id, play['time_started'],
                                          play['time_ended'])
     return play
 
@@ -35,15 +36,19 @@ def start(client_id, client_secret, refresh_token):
 
                 if current_track is not None:
                     playing = current_track['is_playing']
-                    song_id = current_track['item']['id']
+                    track_id = current_track['item']['id']
                     progress = current_track['progress_ms'] / 1000.
+
+                    if not sp.db_provider.track_exists(track_id):
+                        sp.db_provider.add_track_from_spotify_obj(current_track['item'])
+
                     if play is None:
-                        play = new_play(song_id)
+                        play = new_play(track_id)
                     else:
-                        if song_id != play['song_id']: # song changed
+                        if track_id != play['track_id']: # track changed
                             sp.db_provider.update_play_time_ended(play['id'],
                                                                   time)
-                            play = new_play(song_id)
+                            play = new_play(track_id)
                         if not playing and play['playing']: # paused
                             sp.db_provider.add_pause(play['id'], time)
                             play['playing'] = False
@@ -73,6 +78,8 @@ def start(client_id, client_secret, refresh_token):
                 we just end the current play in case an exception occurs
                 """
                 play = None
+                traceback.print_tb(e.__traceback__)
+                print(e)
             sleep(REQUEST_INTERVAL)
     except KeyboardInterrupt as e:
         print('quitting..')

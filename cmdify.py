@@ -22,6 +22,8 @@ if __name__ == '__main__':
                         help='start the powerful data collector')
     parser.add_argument('-c', '--current', action='store_true',
                         help='print the current song')
+    parser.add_argument('-at', '--access_token', action='store_true',
+                        help='just print a valid access token and exit')
     args = parser.parse_args()
 
     client_id = args.client_id
@@ -35,14 +37,12 @@ if __name__ == '__main__':
         sp.get_refresh_token(client_id, client_secret, auth_code['code'],
                              redirect_uri)
         print('done with authentication')
-    access_token = sp.db_provider.get_access_token()
     refresh_token = sp.db_provider.get_refresh_token()
-    if sp.access_token_has_expired(access_token):
-        print('expired.. requesting new one')
-        access_token = sp.get_access_token(client_id, client_secret,
-                                           refresh_token['token'])
+    access_token = sp.get_valid_access_token(client_id, client_secret, refresh_token)
 
-    if args.pause:
+    if args.access_token:
+        print(access_token['token'])
+    elif args.pause:
         sp.pause(access_token['token'])
     elif args.resume:
         sp.resume(access_token['token'])

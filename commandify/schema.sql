@@ -18,17 +18,54 @@ CREATE TABLE access_tokens (
   token TEXT NOT NULL
 );
 
---CREATE TABLE songs (
---  id TEXT PRIMARY KEY NOT NULL,
---  name TEXT NOT NULL
---);
+CREATE TABLE tracks (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  duration_ms INTEGER NOT NULL,
+  popularity INTEGER NOT NULL,
+  preview_url TEXT, -- spotify sometimes doesnt provide one
+  track_number INTEGER NOT NULL,
+  explicit INTEGER NOT NULL, -- 0=false, 1=true
+  album_id TEXT NOT NULL,
+  FOREIGN KEY (album_id) REFERENCES albums (id)
+);
+
+CREATE TABLE albums (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  release_date TEXT NOT NULL,
+  release_date_precision TEXT NOT NULL,
+  image_url TEXT NOT NULL
+);
+
+CREATE TABLE album_artists (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  artist_id TEXT NOT NULL,
+  album_id TEXT NOT NULL,
+  FOREIGN KEY (artist_id) REFERENCES artists (id),
+  FOREIGN KEY (album_id) REFERENCES albums (id)
+);
+
+CREATE TABLE track_artists (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  artist_id TEXT NOT NULL,
+  track_id TEXT NOT NULL,
+  FOREIGN KEY (artist_id) REFERENCES artists (id),
+  FOREIGN KEY (track_id) REFERENCES tracks (id)
+);
+
+CREATE TABLE artists (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL
+);
 
 CREATE TABLE plays (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   time_started INTEGER NOT NULL,
   time_ended INTEGER NOT NULL,
-  song_id TEXT NOT NULL
-  --FOREIGN KEY (song_id) REFERENCES songs (id)
+  track_id TEXT NOT NULL,
+  FOREIGN KEY (track_id) REFERENCES tracks (id)
 );
 
 CREATE TABLE pauses (

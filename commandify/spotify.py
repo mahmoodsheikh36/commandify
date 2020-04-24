@@ -13,7 +13,7 @@ from commandify.utils import current_time
 db_provider = DBProvider()
 
 SPOTIFY_API_RESULTS_LIMIT = 50
-ACCESS_TOKEN_EXPIRE_SECONDS = 2000 # its actually 3600 but lets be more careful
+ACCESS_TOKEN_EXPIRE_SECONDS = 2000 # its actually 3600 but lets be safe
 
 __location__ = os.path.realpath(
             os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -119,3 +119,10 @@ def get_valid_access_token(client_id, client_secret, refresh_token):
         get_access_token(client_id, client_secret, refresh_token['token'])
         return db_provider.get_access_token()
     return access_token
+
+def fetch_track(access_token, track_id):
+    r = requests.get('https://api.spotify.com/v1/tracks/{}'.format(track_id),
+                     headers = {
+                         'Authorization': 'Bearer {}'.format(access_token)
+                     })
+    return json.loads(r.text)
